@@ -1,0 +1,52 @@
+<project name="AbgTests" basedir="." default="main">
+    <property name="src.dir" value="src" />
+    <property name="bin.dir" value="bin" />
+    <property name="libs.dir" value="libs" />
+    <property name="classes.dir" value="${bin.dir}/classes" />
+    <property name="jar.dir" value="${bin.dir}/jar" />
+    <property environment="env" />
+
+    <condition property="sdk.dir" value="${env.ANDROID_HOME}">
+        <isset property="env.ANDROID_HOME" />
+    </condition>
+
+    <path id="classpath">
+        <fileset dir="${libs.dir}" includes="**/*.jar" />
+        <fileset dir="${sdk.dir}" includes="**/*.jar" />
+        <pathelement path="../../bin/classes" />
+    </path>
+
+    <path id="application" location="${jar.dir}/${ant.project.name}.jar" />
+
+    <target name="clean">
+        <delete dir="${bin.dir}" />
+    </target>
+
+    <target name="compile">
+        <mkdir dir="${classes.dir}" />
+        <javac includeantruntime="false" srcdir="${src.dir}"
+               destdir="${classes.dir}" classpathref="classpath" />
+        <copy file="conf/org.robolectric.Config.properties"
+               tofile="${classes.dir}/org.robolectric.Config.properties" />
+    </target>
+
+    <target name="jar" depends="compile">
+        <mkdir dir="${jar.dir}" />
+        <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}" />
+    </target>
+
+    <target name="test" depends="jar">
+        <junit>
+            <formatter type="plain" usefile="false" />
+            <classpath>
+                <path refid="classpath" />
+                <path refid="application" />
+            </classpath>
+            <batchtest fork="yes">
+                <fileset dir="${src.dir}">
+                    <include name="**/*Test.java" />
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+</project>
