@@ -1,4 +1,4 @@
-package com.ncona.abg.models;
+package com.ncona.conversiongraph.models;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;

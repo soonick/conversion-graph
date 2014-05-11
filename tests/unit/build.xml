@@ -1,4 +1,4 @@
-<project name="AbgTests" basedir="." default="main">
+<project name="ConversionGraphTests" basedir="." default="main">
     <property name="src.dir" value="src" />
     <property name="bin.dir" value="bin" />
     <property name="libs.dir" value="libs" />

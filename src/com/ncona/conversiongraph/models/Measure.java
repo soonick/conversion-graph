@@ -1,4 +1,4 @@
-package com.ncona.abg.models;
+package com.ncona.conversiongraph.models;
 
 public class Measure
 {

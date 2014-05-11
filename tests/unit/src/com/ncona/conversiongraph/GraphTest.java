@@ -1,4 +1,4 @@
-package com.ncona.abg;
+package com.ncona.conversiongraph;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -6,7 +6,7 @@ import static org.mockito.Mockito.*;
 import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import com.ncona.abg.models.Measure;
+import com.ncona.conversiongraph.models.Measure;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;

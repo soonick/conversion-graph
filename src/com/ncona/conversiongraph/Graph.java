@@ -1,11 +1,11 @@
-package com.ncona.abg;
+package com.ncona.conversiongraph;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
-import com.ncona.abg.models.Measure;
+import com.ncona.conversiongraph.models.Measure;
 import java.util.List;
 
 public class Graph extends View

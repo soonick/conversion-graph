@@ -1,4 +1,4 @@
-<project name="abgcustom">
+<project name="conversiongraphcustom">
     <target name="test" description="Run Robolectric tests">
         <exec executable="ant" dir="tests/unit" failonerror="true">
             <arg line="clean test" />
