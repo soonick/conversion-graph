@@ -1,3 +1,7 @@
+/**
+ * @author Adrian Ancona Novelo<soonick5@yahoo.com.mx>
+ **/
+
 package com.ncona.conversiongraph.models;
 
 public class Measure
