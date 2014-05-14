@@ -4,4 +4,10 @@ android:
     - build-tools-18.1.1
     - android-8
 
-script: ant health
+before_install:
+  - wget http://hivelocity.dl.sourceforge.net/project/pmd/pmd/5.1.1/pmd-bin-5.1.1.zip
+  - unzip pmd-bin-5.1.1.zip
+  - mv pmd-bin-5.1.1/bin/run.sh pmd-bin-5.1.1/bin/pmdRun.sh
+  - export PATH=${PATH}:$PWD/pmd-bin-5.1.1/bin
+
+script: ant health; cat pmd.out;
