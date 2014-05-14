@@ -10,4 +10,4 @@ before_install:
   - mv pmd-bin-5.1.1/bin/run.sh pmd-bin-5.1.1/bin/pmdRun.sh
   - export PATH=${PATH}:$PWD/pmd-bin-5.1.1/bin
 
-script: ant health; cat pmd.out;
+script: ant health
