@@ -5,3 +5,5 @@
 /cpd.out
 /pmd.out
 /tests/unit/bin/
+/build/
+/.gradle/

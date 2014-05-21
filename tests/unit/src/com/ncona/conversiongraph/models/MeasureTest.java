@@ -1,7 +1,6 @@
 package com.ncona.conversiongraph.models;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,9 +10,9 @@ import org.robolectric.RobolectricTestRunner;
 public class MeasureTest {
     @Test
     public void constructorSetsValues() {
-        Measure m = new Measure("hello", 1);
+        final Measure m = new Measure("hello", 1);
 
-        assertEquals("hello", m.label);
-        assertEquals(1, m.value);
+        assertEquals("Label was set from constructor", "hello", m.label);
+        assertEquals("Set from constructor", 1, m.value);
     }
 }

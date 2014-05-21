@@ -1,9 +1,11 @@
 package com.ncona.conversiongraph;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import com.ncona.conversiongraph.models.Measure;
@@ -18,8 +20,8 @@ public class GraphTest {
     @Test
     public void onDrawDrawsEverything() {
         // Mocks
-        Canvas c = mock(Canvas.class);
-        Graph instance = mock(Graph.class);
+        final Canvas c = mock(Canvas.class);
+        final Graph instance = mock(Graph.class);
         doCallRealMethod().when(instance).onDraw(c);
 
         // Call
@@ -35,12 +37,12 @@ public class GraphTest {
     @Test
     public void drawLabelsDrawsAllLabelsSeparatedCorrectly() {
         // Mocks
-        List<Measure> m = new ArrayList<Measure>();
+        final List<Measure> m = new ArrayList<Measure>();
         m.add(new Measure("uno", 0));
         m.add(new Measure("dos", 0));
-        Canvas c = mock(Canvas.class);
-        Paint p = mock(Paint.class);
-        Graph instance = mock(Graph.class);
+        final Canvas c = mock(Canvas.class);
+        final Paint p = mock(Paint.class);
+        final Graph instance = mock(Graph.class);
         doCallRealMethod().when(instance).drawLabels(c);
         instance.paint = p;
         instance.measures = m;
@@ -56,31 +58,35 @@ public class GraphTest {
     @Test
     public void drawLabelsReturnsWidthOfLongestLabel() {
         // Mocks
-        List<Measure> m = new ArrayList<Measure>();
-        m.add(new Measure("uno", 0));
-        m.add(new Measure("dos", 0));
-        Canvas c = mock(Canvas.class);
-        Paint p = mock(Paint.class);
-        when(p.measureText("uno")).thenReturn((float)10);
-        when(p.measureText("dos")).thenReturn((float)6);
-        Graph instance = mock(Graph.class);
+        final List<Measure> m = new ArrayList<Measure>();
+        m.add(new Measure("tres", 0));
+        m.add(new Measure("cuatro", 0));
+        final Canvas c = mock(Canvas.class);
+        final Paint p = mock(Paint.class);
+        when(p.measureText("tres")).thenReturn((float)10);
+        when(p.measureText("cuatro")).thenReturn((float)6);
+        final Graph instance = mock(Graph.class);
         doCallRealMethod().when(instance).drawLabels(c);
         instance.paint = p;
         instance.measures = m;
 
         // Call
-        assertEquals(10, (int)instance.drawLabels(c));
+        assertEquals(
+            "Returns the width of the longest label",
+            10,
+            (int)instance.drawLabels(c)
+        );
     }
 
     @Test
     public void drawValuesDrawsValues() {
         // Mocks
-        List<Measure> m = new ArrayList<Measure>();
+        final List<Measure> m = new ArrayList<Measure>();
         m.add(new Measure("uno", 100));
         m.add(new Measure("dos", 10));
-        Canvas c = mock(Canvas.class);
-        Paint p = mock(Paint.class);
-        Graph instance = mock(Graph.class);
+        final Canvas c = mock(Canvas.class);
+        final Paint p = mock(Paint.class);
+        final Graph instance = mock(Graph.class);
         doCallRealMethod().when(instance).drawValues(c, 5);
         when(instance.getWidth()).thenReturn(200);
         instance.paint = p;
