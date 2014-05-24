@@ -1,9 +1,9 @@
-/bin/
-/gen/
+bin/
+gen/
 /local.properties
 /.vimrc
 /cpd.out
 /pmd.out
 /tests/unit/bin/
-/build/
-/.gradle/
+build/
+.gradle/

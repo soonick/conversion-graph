@@ -4,4 +4,6 @@ android:
     - build-tools-19.1.0
     - android-8
 
-script: TERM=dumb gradle build --stacktrace
+script:
+  - TERM=dumb gradle build --stacktrace
+  - cd sampleApp; TERM=dumb gradle build --stacktrace
