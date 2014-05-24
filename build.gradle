@@ -12,7 +12,7 @@ apply plugin: 'android-library'
 
 android {
   compileSdkVersion 19
-  buildToolsVersion '19.0.3'
+  buildToolsVersion '19.1.0'
 
   sourceSets {
     main {
@@ -74,5 +74,5 @@ check.dependsOn unitTest
 apply plugin: 'pmd'
 
 pmd {
-  ruleSetFiles = files('scripts/pmd_rules.xml')
+  ruleSetFiles = files('pmd_rules.xml')
 }
