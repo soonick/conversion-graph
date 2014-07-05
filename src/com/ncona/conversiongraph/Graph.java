@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
 import com.ncona.conversiongraph.models.Measure;
+import com.ncona.conversiongraph.views.BarsView;
 import java.util.List;
 
 public class Graph extends View
@@ -25,21 +26,6 @@ public class Graph extends View
     final static private int LABEL_SEPARATION = 20;
 
     /**
-     * Value text size
-     */
-    final static private int VALUE_SIZE = 12;
-
-    /**
-     * Margin from the value bar and the caption
-     */
-    final static private int VALUE_MARGIN = 5;
-
-    /**
-     * Context from which this view is being used
-     */
-    protected Context context;
-
-    /**
      * List of measures that will be graphed
      */
     protected List<Measure> measures;
@@ -50,15 +36,21 @@ public class Graph extends View
     protected Paint paint;
 
     /**
+     * View that takes care of drawing the actual bars in the graph
+     */
+    protected BarsView barsView;
+
+    /**
      * Initialize the view
      */
-    public Graph(final Context ctx) {
-      super(ctx);
-      context = ctx;
+    public Graph(final Context context) {
+        super(context);
+        barsView = new BarsView();
     }
 
     /**
      * Sets the measures to be used when drawing
+     * @param measures
      */
     public void setMeasures(final List<Measure> measures) {
         this.measures = measures;
@@ -73,7 +65,7 @@ public class Graph extends View
         initializePaint();
         final float planeStart = drawLabels(c) + 5;
         drawPlane(c, planeStart);
-        drawValues(c, planeStart);
+        barsView.draw(c, planeStart, (float)getWidth(), measures);
     }
 
     /**
@@ -103,8 +95,11 @@ public class Graph extends View
             if (currentWidth > maxWidth) {
                 maxWidth = currentWidth;
             }
-            c.drawText(m.label, 0, i, paint);
-            i += LABEL_SEPARATION + LABEL_SIZE;
+
+            for (int j = 0; j < m.values.length; j++) {
+                c.drawText(m.label, 0, i, paint);
+                i += LABEL_SEPARATION + LABEL_SIZE;
+            }
         }
 
         return maxWidth;
@@ -118,59 +113,5 @@ public class Graph extends View
     protected void drawPlane(final Canvas c, final float planeStart) {
         c.drawLine(planeStart, 0, planeStart, getHeight(), paint);
         c.drawLine(planeStart, 1, getWidth(), 1, paint);
-    }
-
-    /**
-     * Draws the plane where the values will be drawn
-     * @param c - The canvas where we will draw
-     * @param planeStart - The x coordinate where the plane starts
-     */
-    protected void drawValues(final Canvas c, final float planeStart) {
-        int maxValue = 0;
-        float maxValueWidth = 0;
-        float currentValueWidth = 0;
-
-        for (final Measure m : measures) {
-            if (m.value > maxValue) {
-                maxValue = m.value;
-            }
-
-            currentValueWidth = paint.measureText(Integer.toString(m.value));
-            if (currentValueWidth > maxValueWidth) {
-                maxValueWidth = currentValueWidth;
-            }
-        }
-
-        int i = LABEL_SEPARATION;
-        final int maxWidth = getWidth() - (int)(maxValueWidth + planeStart);
-        int currentWidth;
-        int currentPercentage;
-        float currentTextSize;
-        paint.setTextSize(VALUE_SIZE);
-
-        for (final Measure m : measures) {
-            currentWidth = (m.value * maxWidth) / maxValue;
-            c.drawRect(
-                planeStart, i,
-                planeStart + currentWidth, i + LABEL_SIZE,
-                paint
-            );
-            c.drawText(
-                Integer.toString(m.value),
-                planeStart + currentWidth + VALUE_MARGIN, i + VALUE_SIZE,
-                paint
-            );
-            currentTextSize = paint.measureText(Integer.toString(m.value));
-            if (i != LABEL_SEPARATION) {
-                currentPercentage = (m.value * 100) / maxValue;
-                c.drawText(
-                    "(" + currentPercentage + "%)",
-                    planeStart + currentWidth + currentTextSize + VALUE_MARGIN,
-                    i + VALUE_SIZE,
-                    paint
-                );
-            }
-            i += LABEL_SEPARATION + LABEL_SIZE;
-        }
     }
 }

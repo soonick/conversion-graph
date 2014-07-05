@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import com.ncona.conversiongraph.models.Measure;
+import com.ncona.conversiongraph.views.BarsView;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
@@ -20,9 +21,14 @@ public class GraphTest {
     @Test
     public void onDrawDrawsEverything() {
         // Mocks
+        final List<Measure> m = new ArrayList<Measure>();
         final Canvas c = mock(Canvas.class);
+        final BarsView bv = mock(BarsView.class);
         final Graph instance = mock(Graph.class);
         doCallRealMethod().when(instance).onDraw(c);
+        when(instance.getWidth()).thenReturn(400);
+        instance.barsView = bv;
+        instance.measures = m;
 
         // Call
         instance.onDraw(c);
@@ -31,15 +37,16 @@ public class GraphTest {
         verify(instance).initializePaint();
         verify(instance).drawLabels(c);
         verify(instance).drawPlane(c, 5);
-        verify(instance).drawValues(c, 5);
+        verify(bv).draw(c, 5, 400, m);
     }
 
     @Test
     public void drawLabelsDrawsAllLabelsSeparatedCorrectly() {
         // Mocks
         final List<Measure> m = new ArrayList<Measure>();
-        m.add(new Measure("uno", 0));
-        m.add(new Measure("dos", 0));
+        final int[] values = { 0 };
+        m.add(new Measure("uno", values));
+        m.add(new Measure("dos", values));
         final Canvas c = mock(Canvas.class);
         final Paint p = mock(Paint.class);
         final Graph instance = mock(Graph.class);
@@ -59,8 +66,9 @@ public class GraphTest {
     public void drawLabelsReturnsWidthOfLongestLabel() {
         // Mocks
         final List<Measure> m = new ArrayList<Measure>();
-        m.add(new Measure("tres", 0));
-        m.add(new Measure("cuatro", 0));
+        final int[] values = { 0 };
+        m.add(new Measure("tres", values));
+        m.add(new Measure("cuatro", values));
         final Canvas c = mock(Canvas.class);
         final Paint p = mock(Paint.class);
         when(p.measureText("tres")).thenReturn((float)10);
@@ -76,27 +84,5 @@ public class GraphTest {
             10,
             (int)instance.drawLabels(c)
         );
-    }
-
-    @Test
-    public void drawValuesDrawsValues() {
-        // Mocks
-        final List<Measure> m = new ArrayList<Measure>();
-        m.add(new Measure("uno", 100));
-        m.add(new Measure("dos", 10));
-        final Canvas c = mock(Canvas.class);
-        final Paint p = mock(Paint.class);
-        final Graph instance = mock(Graph.class);
-        doCallRealMethod().when(instance).drawValues(c, 5);
-        when(instance.getWidth()).thenReturn(200);
-        instance.paint = p;
-        instance.measures = m;
-
-        // Call
-        instance.drawValues(c, 5);
-
-        // Verifications
-        verify(c).drawRect(5, 20, 200, 36, p);
-        verify(c).drawRect(5, 56, 24, 72, p);
     }
 }
