@@ -20,11 +20,11 @@ public class Main extends Activity
         Graph conversiongraph = new Graph(this);
         List<Measure> measures = new ArrayList<Measure>();
 
-        int[] values = { 10000, 100 };
+        int[] values = { 10000, 5000 };
         measures.add(new Measure("Leads", values));
-        int[] values2 = { 3000, 50 };
+        int[] values2 = { 3000, 2800 };
         measures.add(new Measure("Prospects", values2));
-        int[] values3 = { 500, 5 };
+        int[] values3 = { 500, 100 };
         measures.add(new Measure("Customers", values3));
         conversiongraph.setMeasures(measures);
         Legend[] legend = {

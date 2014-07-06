@@ -95,9 +95,9 @@ public class Graph extends View
     public void onDraw(final Canvas c) {
         initializePaint();
         int top = legendsView.draw(c, this.legends);
-        final float left = drawLabels(c, top) + MARGIN;
+        final int left = drawLabels(c, top) + MARGIN;
         drawPlane(c, left, top);
-        barsView.draw(c, left, (float)getWidth(), top, measures, legends);
+        barsView.draw(c, left, getWidth(), top, measures, legends);
     }
 
     /**
@@ -118,12 +118,12 @@ public class Graph extends View
      * @return maxWidth - The width of the longest label. (The x coordinate of
      *                    the end of the label.
      */
-    protected float drawLabels(final Canvas c, final int top) {
-        float maxWidth = 0;
-        float currentWidth;
+    protected int drawLabels(final Canvas c, final int top) {
+        int maxWidth = 0;
+        int currentWidth;
 
         for (final Measure m : measures) {
-            currentWidth = paint.measureText(m.label);
+            currentWidth = (int)paint.measureText(m.label);
             if (currentWidth > maxWidth) {
                 maxWidth = currentWidth;
             }
@@ -141,7 +141,7 @@ public class Graph extends View
             labelPosition = currentTop + ((currentBottom - currentTop) / 2) +
                 halfLabel;
 
-            currentWidth = paint.measureText(m.label);
+            currentWidth = (int)paint.measureText(m.label);
             c.drawText(
                 m.label,
                 MARGIN + maxWidth - currentWidth,

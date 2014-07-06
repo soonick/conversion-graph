@@ -7,6 +7,7 @@ package com.ncona.conversiongraph.views;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import com.ncona.conversiongraph.models.Legend;
 import com.ncona.conversiongraph.models.Measure;
 import java.util.List;
@@ -34,6 +35,11 @@ public class BarsView
     final static private int CAPTION_MARGIN = 5;
 
     /**
+     * Number of pixels that will be used to round rectagle corners
+     */
+    final static private int ROUNDED_PIXELS = 4;
+
+    /**
      * Canvas where bars will be drawn
      */
     protected Canvas canvas;
@@ -41,12 +47,12 @@ public class BarsView
     /**
      * Coordinate x left limit
      */
-    protected float left;
+    protected int left;
 
     /**
      * Coordinate x right limit
      */
-    protected float right;
+    protected int right;
 
     /**
      * List of measures that will be graphed
@@ -83,7 +89,7 @@ public class BarsView
      * @param right - The x coordinate where the plane ends
      * @param measures - The measures that will be drawn
      */
-    public void draw(final Canvas canvas, final float left, final float right,
+    public void draw(final Canvas canvas, final int left, final int right,
             int top, List<Measure> measures, Legend[] legends) {
         this.canvas = canvas;
         this.measures = measures;
@@ -96,7 +102,7 @@ public class BarsView
         float maxValueWidth = paint.measureText(Integer.toString(maxValue));
 
         // The width of the longest bar in pixels
-        final int maxWidth = (int)right -
+        final int maxWidth = right -
                 (int)(maxValueWidth + left + (CAPTION_MARGIN * 2));
 
         top += BAR_MARGIN;
@@ -123,6 +129,40 @@ public class BarsView
     }
 
     /**
+     * Creates a rectangle. This only exists so we can mock and test.
+     * @param left - Left limit
+     * @param top - Top limit
+     * @param right - Right limit
+     * @param bottom - Bottom limit
+     */
+    protected RectF createRectangle(final int left, final int top, final int right,
+            final int bottom) {
+        return new RectF(left, top, right, bottom);
+    }
+
+    /**
+     * Draws a rectagle with some extra styles to make it look pretty
+     * @param left - Left limit
+     * @param top - Top limit
+     * @param right - Right limit
+     * @param bottom - Bottom limit
+     */
+    protected void drawPrettyRectangle(final int left, final int top,
+            final int right, final int bottom) {
+        int rectRight = left + ROUNDED_PIXELS;
+        if (rectRight > right) {
+            rectRight = left + ((right - left) / 2);
+        }
+        canvas.drawRect(createRectangle(left, top, rectRight, bottom), paint);
+        canvas.drawRoundRect(
+            createRectangle(left, top, right, bottom),
+            ROUNDED_PIXELS,
+            ROUNDED_PIXELS,
+            paint
+        );
+    }
+
+    /**
      * Draws a bar with it's caption
      * @param top - The top coordinate where this bar will start
      * @param value - The caption for this bar
@@ -130,12 +170,11 @@ public class BarsView
      * @param percentage - The percetage value
      */
     protected void drawValue(final int top, final int width, final String caption) {
-        canvas.drawRect(
+        drawPrettyRectangle(
             left,
             top,
             left + width,
-            top + BAR_HEIGHT,
-            paint
+            top + BAR_HEIGHT
         );
 
         canvas.drawText(

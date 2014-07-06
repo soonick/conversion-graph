@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import com.ncona.conversiongraph.models.Legend;
 import com.ncona.conversiongraph.models.Measure;
 import java.util.ArrayList;
@@ -30,14 +31,14 @@ public class BarsViewTest {
         m.add(new Measure("First", values));
         m.add(new Measure("Second", values2));
         final BarsView instance = mock(BarsView.class);
-        doCallRealMethod().when(instance).draw(c, 0f, 10000f, 0, m, null);
+        doCallRealMethod().when(instance).draw(c, 0, 10000, 0, m, null);
         when(instance.getMaxValue()).thenReturn(1000);
         final Paint p = mock(Paint.class);
         instance.paint = p;
         when(p.measureText("1000")).thenReturn(300f);
         instance.measures = m;
 
-        instance.draw(c, 0f, 10000f, 0, m, null);
+        instance.draw(c, 0, 10000, 0, m, null);
 
         // 9690 is the screen width minus 300 for the text and 10 for margin
         verify(instance).drawValue(10, 9690, "1000");
@@ -50,22 +51,22 @@ public class BarsViewTest {
     public void drawSetsCorrectColorsOnPaint() {
         // Mocks
         final Canvas c = mock(Canvas.class);
-        Legend l1 = new Legend("hello", Color.YELLOW);
-        Legend l2 = new Legend("hello", Color.RED);
-        Legend[] legends = { l1, l2 };
+        final Legend l1 = new Legend("hello", Color.YELLOW);
+        final Legend l2 = new Legend("hello", Color.RED);
+        final Legend[] legends = { l1, l2 };
         final List<Measure> m = new ArrayList<Measure>();
         final int[] values = { 1000, 100 };
         final int[] values2 = { 500, 40 };
         m.add(new Measure("First", values));
         m.add(new Measure("Second", values2));
         final BarsView instance = mock(BarsView.class);
-        doCallRealMethod().when(instance).draw(c, 0f, 10000f, 0, m, legends);
+        doCallRealMethod().when(instance).draw(c, 0, 10000, 0, m, legends);
         when(instance.getMaxValue()).thenReturn(1000);
         final Paint p = mock(Paint.class);
         instance.paint = p;
         when(p.measureText("1000")).thenReturn(300f);
 
-        instance.draw(c, 0f, 10000f, 0, m, legends);
+        instance.draw(c, 0, 10000, 0, m, legends);
 
         verify(p, times(2)).setColor(Color.YELLOW);
         verify(p, times(2)).setColor(Color.RED);
@@ -87,5 +88,26 @@ public class BarsViewTest {
             1003,
             instance.getMaxValue()
         );
+    }
+
+    @Test
+    public void drawPrettyRectangleDrawsTwoRectanglesOneOfThemWithRoundedCorners() {
+        // Mocks
+        final Canvas canvas = mock(Canvas.class);
+        final Paint paint = mock(Paint.class);
+        final RectF firstRectangle = mock(RectF.class);
+        final RectF secondRectangle = mock(RectF.class);
+
+        final BarsView instance = mock(BarsView.class);
+        doCallRealMethod().when(instance).drawPrettyRectangle(0, 0, 500, 20);
+        when(instance.createRectangle(0, 0, 4, 20)).thenReturn(firstRectangle);
+        when(instance.createRectangle(0, 0, 500, 20)).thenReturn(secondRectangle);
+        instance.canvas = canvas;
+        instance.paint = paint;
+
+        instance.drawPrettyRectangle(0, 0, 500, 20);
+
+        verify(canvas).drawRect(firstRectangle, paint);
+        verify(canvas).drawRoundRect(secondRectangle, 4, 4, paint);
     }
 }
