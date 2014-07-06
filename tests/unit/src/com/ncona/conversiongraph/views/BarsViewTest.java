@@ -3,11 +3,14 @@ package com.ncona.conversiongraph.views;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import com.ncona.conversiongraph.models.Legend;
 import com.ncona.conversiongraph.models.Measure;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,20 +30,45 @@ public class BarsViewTest {
         m.add(new Measure("First", values));
         m.add(new Measure("Second", values2));
         final BarsView instance = mock(BarsView.class);
-        doCallRealMethod().when(instance).draw(c, 0f, 10000f, 0, m);
+        doCallRealMethod().when(instance).draw(c, 0f, 10000f, 0, m, null);
         when(instance.getMaxValue()).thenReturn(1000);
         final Paint p = mock(Paint.class);
         instance.paint = p;
         when(p.measureText("1000")).thenReturn(300f);
         instance.measures = m;
 
-        instance.draw(c, 0f, 10000f, 0, m);
+        instance.draw(c, 0f, 10000f, 0, m, null);
 
         // 9690 is the screen width minus 300 for the text and 10 for margin
         verify(instance).drawValue(10, 9690, "1000");
         verify(instance).drawValue(36, 969, "100");
         verify(instance).drawValue(62, 4845, "500 (50%)");
         verify(instance).drawValue(88, 387, "40 (40%)");
+    }
+
+    @Test
+    public void drawSetsCorrectColorsOnPaint() {
+        // Mocks
+        final Canvas c = mock(Canvas.class);
+        Legend l1 = new Legend("hello", Color.YELLOW);
+        Legend l2 = new Legend("hello", Color.RED);
+        Legend[] legends = { l1, l2 };
+        final List<Measure> m = new ArrayList<Measure>();
+        final int[] values = { 1000, 100 };
+        final int[] values2 = { 500, 40 };
+        m.add(new Measure("First", values));
+        m.add(new Measure("Second", values2));
+        final BarsView instance = mock(BarsView.class);
+        doCallRealMethod().when(instance).draw(c, 0f, 10000f, 0, m, legends);
+        when(instance.getMaxValue()).thenReturn(1000);
+        final Paint p = mock(Paint.class);
+        instance.paint = p;
+        when(p.measureText("1000")).thenReturn(300f);
+
+        instance.draw(c, 0f, 10000f, 0, m, legends);
+
+        verify(p, times(2)).setColor(Color.YELLOW);
+        verify(p, times(2)).setColor(Color.RED);
     }
 
     @Test

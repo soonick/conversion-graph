@@ -7,6 +7,7 @@ package com.ncona.conversiongraph.views;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import com.ncona.conversiongraph.models.Legend;
 import com.ncona.conversiongraph.models.Measure;
 import java.util.List;
 
@@ -83,7 +84,7 @@ public class BarsView
      * @param measures - The measures that will be drawn
      */
     public void draw(final Canvas canvas, final float left, final float right,
-            int top, List<Measure> measures) {
+            int top, List<Measure> measures, Legend[] legends) {
         this.canvas = canvas;
         this.measures = measures;
         this.left = left;
@@ -105,6 +106,10 @@ public class BarsView
 
         for (final Measure m : measures) {
             for (int j = 0; j < m.values.length; j++) {
+                if (legends != null) {
+                    paint.setColor(legends[j].color);
+                }
+
                 caption = Integer.toString(m.values[j]);
                 int barWidth = (m.values[j] * maxWidth) / maxValue;
                 int percentage = (m.values[j] * 100) / first.values[j];

@@ -46,7 +46,7 @@ public class GraphTest {
         verify(instance).initializePaint();
         verify(instance).drawLabels(c, 0);
         verify(instance).drawPlane(c, 10, 0);
-        verify(bv).draw(c, 10, 400, 0, m);
+        verify(bv).draw(c, 10, 400, 0, m, legends);
     }
 
     @Test

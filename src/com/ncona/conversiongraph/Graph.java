@@ -97,7 +97,7 @@ public class Graph extends View
         int top = legendsView.draw(c, this.legends);
         final float left = drawLabels(c, top) + MARGIN;
         drawPlane(c, left, top);
-        barsView.draw(c, left, (float)getWidth(), top, measures);
+        barsView.draw(c, left, (float)getWidth(), top, measures, legends);
     }
 
     /**
