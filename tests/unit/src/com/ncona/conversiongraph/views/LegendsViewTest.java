@@ -63,7 +63,7 @@ public class LegendsViewTest {
     }
 
     @Test
-    public void drawDrawsReturnsBottomOfLegends() {
+    public void drawReturnsBottomOfLegendsPlusMargin() {
         // Mocks
         final Paint paint = mock(Paint.class);
         final Canvas canvas = mock(Canvas.class);
@@ -78,7 +78,7 @@ public class LegendsViewTest {
         assertEquals(
             "Retuns bottom of all legends",
             instance.draw(canvas, legends),
-            44
+            54
         );
     }
 

@@ -87,6 +87,6 @@ public class LegendsView
             top += TEXT_SIZE + LEGENDS_MARGIN;
         }
 
-        return top;
+        return top + MARGIN;
     }
 }
