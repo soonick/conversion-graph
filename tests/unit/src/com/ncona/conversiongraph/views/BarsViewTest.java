@@ -37,10 +37,10 @@ public class BarsViewTest {
         instance.draw(c, 0f, 10000f, 0, m);
 
         // 9690 is the screen width minus 300 for the text and 10 for margin
-        verify(instance).drawValue(20, 9690, "1000");
-        verify(instance).drawValue(56, 969, "100");
-        verify(instance).drawValue(92, 4845, "500 (50%)");
-        verify(instance).drawValue(128, 387, "40 (40%)");
+        verify(instance).drawValue(10, 9690, "1000");
+        verify(instance).drawValue(36, 969, "100");
+        verify(instance).drawValue(62, 4845, "500 (50%)");
+        verify(instance).drawValue(88, 387, "40 (40%)");
     }
 
     @Test

@@ -45,8 +45,8 @@ public class GraphTest {
         // Verifications
         verify(instance).initializePaint();
         verify(instance).drawLabels(c, 0);
-        verify(instance).drawPlane(c, 5, 0);
-        verify(bv).draw(c, 5, 400, 0, m);
+        verify(instance).drawPlane(c, 10, 0);
+        verify(bv).draw(c, 10, 400, 0, m);
     }
 
     @Test
@@ -67,12 +67,34 @@ public class GraphTest {
         instance.drawLabels(c, 0);
 
         // Verifications
-        verify(c).drawText("uno", 0, 36, p);
-        verify(c).drawText("dos", 0, 72, p);
+        verify(c).drawText("uno", 10, 26, p);
+        verify(c).drawText("dos", 10, 52, p);
     }
 
     @Test
-    public void drawLabelsReturnsWidthOfLongestLabel() {
+    public void drawLabelsDrawsAllLabelsSeparatedCorrectlyEvenWhenThereIsMoreThanOneValue() {
+        // Mocks
+        final List<Measure> m = new ArrayList<Measure>();
+        final int[] values = { 0, 0 };
+        m.add(new Measure("diez", values));
+        m.add(new Measure("once", values));
+        final Canvas c = mock(Canvas.class);
+        final Paint p = mock(Paint.class);
+        final Graph instance = mock(Graph.class);
+        doCallRealMethod().when(instance).drawLabels(c, 0);
+        instance.paint = p;
+        instance.measures = m;
+
+        // Call
+        instance.drawLabels(c, 0);
+
+        // Verifications
+        verify(c).drawText("diez", 10, 39, p);
+        verify(c).drawText("once", 10, 91, p);
+    }
+
+    @Test
+    public void drawLabelsReturnsTheYCoordinateWhereTheLongestLabelEnds() {
         // Mocks
         final List<Measure> m = new ArrayList<Measure>();
         final int[] values = { 0 };
@@ -89,8 +111,8 @@ public class GraphTest {
 
         // Call
         assertEquals(
-            "Returns the width of the longest label",
-            10,
+            "Returns the width of the longest label + margin",
+            20,
             (int)instance.drawLabels(c, 0)
         );
     }

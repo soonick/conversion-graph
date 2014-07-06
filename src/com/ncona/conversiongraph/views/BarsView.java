@@ -25,7 +25,7 @@ public class BarsView
     /**
      * Separation between bars
      */
-    final static private int BAR_MARGIN = 20;
+    final static private int BAR_MARGIN = 10;
 
     /**
      * Margin between the bar and its caption

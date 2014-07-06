@@ -25,12 +25,17 @@ public class Graph extends View
     /**
      * Separation between labels
      */
-    final static private int LABEL_SEPARATION = 20;
+    final static private int LABEL_SEPARATION = 10;
 
     /**
      * Margin between the labels and the plane
      */
     final static private int LABELS_PLANE_MARGIN = 5;
+
+    /**
+     * Margin against the limit of the canvas
+     */
+    final static private int MARGIN = 10;
 
     /**
      * List of measures that will be graphed
@@ -90,7 +95,7 @@ public class Graph extends View
     public void onDraw(final Canvas c) {
         initializePaint();
         int top = legendsView.draw(c, this.legends);
-        final float left = drawLabels(c, top) + LABELS_PLANE_MARGIN;
+        final float left = drawLabels(c, top) + MARGIN;
         drawPlane(c, left, top);
         barsView.draw(c, left, (float)getWidth(), top, measures);
     }
@@ -117,20 +122,37 @@ public class Graph extends View
         float maxWidth = 0;
         float currentWidth;
 
-        int i = top + LABEL_SEPARATION + LABEL_SIZE;
         for (final Measure m : measures) {
             currentWidth = paint.measureText(m.label);
             if (currentWidth > maxWidth) {
                 maxWidth = currentWidth;
             }
-
-            for (int j = 0; j < m.values.length; j++) {
-                c.drawText(m.label, 0, i, paint);
-                i += LABEL_SEPARATION + LABEL_SIZE;
-            }
         }
 
-        return maxWidth;
+        int halfLabel = LABEL_SIZE / 2;
+        int currentTop = top;
+        int currentBottom = 0;
+        int labelPosition = 0;
+        for (final Measure m : measures) {
+            // Calculate where to draw the label
+            currentTop = currentTop + MARGIN;
+            currentBottom = currentTop + (m.values.length * LABEL_SIZE) +
+                    ((m.values.length - 1) * MARGIN);
+            labelPosition = currentTop + ((currentBottom - currentTop) / 2) +
+                halfLabel;
+
+            currentWidth = paint.measureText(m.label);
+            c.drawText(
+                m.label,
+                MARGIN + maxWidth - currentWidth,
+                labelPosition,
+                paint
+            );
+
+            currentTop = currentBottom;
+        }
+
+        return maxWidth + MARGIN;
     }
 
     /**
