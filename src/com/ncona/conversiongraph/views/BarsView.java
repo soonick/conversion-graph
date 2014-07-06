@@ -83,7 +83,7 @@ public class BarsView
      * @param measures - The measures that will be drawn
      */
     public void draw(final Canvas canvas, final float left, final float right,
-            List<Measure> measures) {
+            int top, List<Measure> measures) {
         this.canvas = canvas;
         this.measures = measures;
         this.left = left;
@@ -98,7 +98,7 @@ public class BarsView
         final int maxWidth = (int)right -
                 (int)(maxValueWidth + left + (CAPTION_MARGIN * 2));
 
-        int top = BAR_MARGIN;
+        top += BAR_MARGIN;
 
         Measure first = measures.get(0);
         String caption;

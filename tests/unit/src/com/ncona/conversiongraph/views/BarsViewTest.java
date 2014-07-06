@@ -27,16 +27,16 @@ public class BarsViewTest {
         m.add(new Measure("First", values));
         m.add(new Measure("Second", values2));
         final BarsView instance = mock(BarsView.class);
-        doCallRealMethod().when(instance).draw(c, 0f, 10000f, m);
+        doCallRealMethod().when(instance).draw(c, 0f, 10000f, 0, m);
         when(instance.getMaxValue()).thenReturn(1000);
         final Paint p = mock(Paint.class);
         instance.paint = p;
         when(p.measureText("1000")).thenReturn(300f);
         instance.measures = m;
 
-        instance.draw(c, 0f, 10000f, m);
+        instance.draw(c, 0f, 10000f, 0, m);
 
-        // 9700 is the width of the screen minus 300 for the text
+        // 9690 is the screen width minus 300 for the text and 10 for margin
         verify(instance).drawValue(20, 9690, "1000");
         verify(instance).drawValue(56, 969, "100");
         verify(instance).drawValue(92, 4845, "500 (50%)");

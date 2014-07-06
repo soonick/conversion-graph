@@ -1,5 +1,6 @@
 package com.ncona.conversiongraph;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
@@ -8,8 +9,10 @@ import static org.mockito.Mockito.when;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import com.ncona.conversiongraph.models.Legend;
 import com.ncona.conversiongraph.models.Measure;
 import com.ncona.conversiongraph.views.BarsView;
+import com.ncona.conversiongraph.views.LegendsView;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
@@ -24,20 +27,26 @@ public class GraphTest {
         final List<Measure> m = new ArrayList<Measure>();
         final Canvas c = mock(Canvas.class);
         final BarsView bv = mock(BarsView.class);
+        final Legend legend = new Legend("hello", 5);
+        final Legend[] legends = { legend };
+        final LegendsView lv = mock(LegendsView.class);
+        when(lv.draw(c, legends)).thenReturn(0);
         final Graph instance = mock(Graph.class);
         doCallRealMethod().when(instance).onDraw(c);
         when(instance.getWidth()).thenReturn(400);
         instance.barsView = bv;
         instance.measures = m;
+        instance.legends = legends;
+        instance.legendsView = lv;
 
         // Call
         instance.onDraw(c);
 
         // Verifications
         verify(instance).initializePaint();
-        verify(instance).drawLabels(c);
-        verify(instance).drawPlane(c, 5);
-        verify(bv).draw(c, 5, 400, m);
+        verify(instance).drawLabels(c, 0);
+        verify(instance).drawPlane(c, 5, 0);
+        verify(bv).draw(c, 5, 400, 0, m);
     }
 
     @Test
@@ -50,12 +59,12 @@ public class GraphTest {
         final Canvas c = mock(Canvas.class);
         final Paint p = mock(Paint.class);
         final Graph instance = mock(Graph.class);
-        doCallRealMethod().when(instance).drawLabels(c);
+        doCallRealMethod().when(instance).drawLabels(c, 0);
         instance.paint = p;
         instance.measures = m;
 
         // Call
-        instance.drawLabels(c);
+        instance.drawLabels(c, 0);
 
         // Verifications
         verify(c).drawText("uno", 0, 36, p);
@@ -74,7 +83,7 @@ public class GraphTest {
         when(p.measureText("tres")).thenReturn((float)10);
         when(p.measureText("cuatro")).thenReturn((float)6);
         final Graph instance = mock(Graph.class);
-        doCallRealMethod().when(instance).drawLabels(c);
+        doCallRealMethod().when(instance).drawLabels(c, 0);
         instance.paint = p;
         instance.measures = m;
 
@@ -82,7 +91,24 @@ public class GraphTest {
         assertEquals(
             "Returns the width of the longest label",
             10,
-            (int)instance.drawLabels(c)
+            (int)instance.drawLabels(c, 0)
+        );
+    }
+
+    @Test
+    public void setLegendSavesTheLegends() {
+        final Legend legend = new Legend("hello", 5);
+        final Legend[] legends = { legend };
+
+        final Graph instance = mock(Graph.class);
+        doCallRealMethod().when(instance).setLegends(legends);
+
+        instance.setLegends(legends);
+
+        assertArrayEquals(
+            "Legends were saved as an attribute",
+            legends,
+            instance.legends
         );
     }
 }
