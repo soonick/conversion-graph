@@ -27,6 +27,11 @@ public class LegendsView
     final static private int LEGENDS_MARGIN = 5;
 
     /**
+     * Default color for legend
+     */
+    final static private int DEFAULT_COLOR = Color.WHITE;
+
+    /**
      * Paint used for drawing
      */
     protected Paint paint;
@@ -44,9 +49,22 @@ public class LegendsView
     protected void initializePaint() {
         paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.WHITE);
+        paint.setColor(DEFAULT_COLOR);
         paint.setTextSize(TEXT_SIZE);
         paint.setAntiAlias(true);
+    }
+
+    /**
+     * Creates a paint for a legend's rectangle
+     * @param color - Color for this paint
+     * @return paint
+     */
+    protected Paint createRectanglePaint(final int color) {
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(color);
+
+        return paint;
     }
 
     /**
@@ -63,7 +81,8 @@ public class LegendsView
         int legendLeft = left + TEXT_SIZE + LEGENDS_MARGIN;
 
         for (int i = 0; i < legends.length; i++) {
-            canvas.drawRect(left, top, colorRight, top + TEXT_SIZE, paint);
+            canvas.drawRect(left, top, colorRight, top + TEXT_SIZE,
+                    createRectanglePaint(legends[i].color));
             canvas.drawText(legends[i].label, legendLeft, top + TEXT_SIZE, paint);
             top += TEXT_SIZE + LEGENDS_MARGIN;
         }

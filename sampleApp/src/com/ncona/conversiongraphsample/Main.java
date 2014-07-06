@@ -1,6 +1,7 @@
 package com.ncona.conversiongraphsample;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import com.ncona.conversiongraph.Graph;
@@ -27,8 +28,8 @@ public class Main extends Activity
         measures.add(new Measure("Customers", values3));
         conversiongraph.setMeasures(measures);
         Legend[] legend = {
-            new Legend("this month", 4),
-            new Legend("Last month", 89),
+            new Legend("this month", Color.YELLOW),
+            new Legend("Last month", Color.RED),
         };
         conversiongraph.setLegends(legend);
         setContentView((View)conversiongraph);
