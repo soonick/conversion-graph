@@ -6,6 +6,12 @@ android:
   licenses:
     - android-sdk-license-5be876d5
 
+before_install:
+  - sudo rm -r /usr/local/gradle
+  - curl -LO http://services.gradle.org/distributions/gradle-1.11-bin.zip
+  - unzip -q gradle-1.11-bin.zip
+  - sudo mv gradle-1.11 /usr/local/gradle
+
 script:
   - TERM=dumb gradle build --stacktrace
   - cd sampleApp; TERM=dumb gradle build --stacktrace
