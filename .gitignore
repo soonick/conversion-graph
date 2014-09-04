@@ -7,3 +7,4 @@ gen/
 /tests/unit/bin/
 build/
 .gradle/
+gradle.properties

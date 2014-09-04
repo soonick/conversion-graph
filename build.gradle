@@ -1,3 +1,7 @@
+repositories {
+  mavenCentral()
+}
+
 buildscript {
   repositories {
     mavenCentral()
@@ -33,11 +37,7 @@ android {
   }
 }
 
-
 // ----------- Unit tests ---------------
-repositories {
-  mavenCentral()
-}
 
 // extend the runtime
 configurations {
@@ -45,7 +45,7 @@ configurations {
   unitTestRuntime.extendsFrom unitTestCompile
 }
 
-// add to dependancies
+// add to dependencies
 dependencies {
   unitTestCompile files("$project.buildDir/classes/debug")
   unitTestCompile fileTree(dir: 'tests/unit/libs/', include: '*.jar')
@@ -75,4 +75,85 @@ apply plugin: 'pmd'
 
 pmd {
   ruleSetFiles = files('pmd_rules.xml')
+}
+
+// ----------- Javadoc -----------------
+
+task androidJavadocs(type: Javadoc) {
+  source = android.sourceSets.main.allSource
+  classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task androidJavadocsJar(type: Jar) {
+  classifier = 'javadoc'
+  from androidJavadocs.destinationDir
+}
+
+// -------------- Sources Jar ----------
+
+task sourcesJar(type: Jar) {
+  classifier = 'sources'
+  from android.sourceSets.main.allSource
+}
+
+// ------------- Define the artifacts ---------
+artifacts {
+  archives androidJavadocsJar, sourcesJar
+}
+
+// --------------- Publishing -------------
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+signing {
+  sign configurations.archives
+}
+
+group = "com.ncona"
+archivesBaseName = "conversion-graph"
+version = "1.0.0"
+
+if (hasProperty('ossrhUsername') && hasProperty('ossrhPassword')) {
+  uploadArchives {
+    repositories {
+      mavenDeployer {
+        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+        repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+          authentication(userName: ossrhUsername, password: ossrhPassword)
+        }
+
+        snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+          authentication(userName: ossrhUsername, password: ossrhPassword)
+        }
+
+        pom.project {
+          name 'Conversion graph'
+          packaging 'aar'
+          description 'Graphs a conversion path'
+          url 'https://github.com/soonick/conversion-graph'
+
+          scm {
+            url 'https://github.com/soonick/conversion-graph'
+            connection 'scm:git:https://github.com/soonick/conversion-graph.git'
+          }
+
+          licenses {
+            license {
+              name 'The Apache License, Version 2.0'
+              url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+            }
+          }
+
+          developers {
+            developer {
+              id 'soonick'
+              name 'Adrian Ancona Novelo'
+              email 'soonick5@yahoo.com.mx'
+            }
+          }
+        }
+      }
+    }
+  }
 }
