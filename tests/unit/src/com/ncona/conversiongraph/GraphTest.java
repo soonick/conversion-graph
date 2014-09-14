@@ -7,8 +7,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import android.app.Activity;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.DisplayMetrics;
 import com.ncona.conversiongraph.models.Legend;
 import com.ncona.conversiongraph.models.Measure;
 import com.ncona.conversiongraph.views.BarsView;
@@ -38,6 +41,7 @@ public class GraphTest {
         instance.measures = m;
         instance.legends = legends;
         instance.legendsView = lv;
+        instance.margin = 10;
 
         // Call
         instance.onDraw(c);
@@ -47,6 +51,26 @@ public class GraphTest {
         verify(instance).drawLabels(c, 0);
         verify(instance).drawPlane(c, 10, 0);
         verify(bv).draw(c, 10, 400, 0, m, legends);
+    }
+
+    @Test
+    public void calculateSizesTakesDensityIntoAccount() {
+        // Mocks
+        DisplayMetrics dm = mock(DisplayMetrics.class);
+        dm.density = 2;
+        Resources res = mock(Resources.class);
+        when(res.getDisplayMetrics()).thenReturn(dm);
+        Activity context = mock(Activity.class);
+        when(context.getResources()).thenReturn(res);
+        final Graph instance = mock(Graph.class);
+        doCallRealMethod().when(instance).calculateSizes(context);
+
+        // Call
+        instance.calculateSizes(context);
+
+        // Assertions
+        assertEquals(instance.margin, 20);
+        assertEquals(instance.labelSize, 32);
     }
 
     @Test
@@ -62,6 +86,8 @@ public class GraphTest {
         doCallRealMethod().when(instance).drawLabels(c, 0);
         instance.paint = p;
         instance.measures = m;
+        instance.margin = 10;
+        instance.labelSize = 16;
 
         // Call
         instance.drawLabels(c, 0);
@@ -84,6 +110,8 @@ public class GraphTest {
         doCallRealMethod().when(instance).drawLabels(c, 0);
         instance.paint = p;
         instance.measures = m;
+        instance.margin = 10;
+        instance.labelSize = 16;
 
         // Call
         instance.drawLabels(c, 0);
@@ -108,12 +136,13 @@ public class GraphTest {
         doCallRealMethod().when(instance).drawLabels(c, 0);
         instance.paint = p;
         instance.measures = m;
+        instance.margin = 10;
 
         // Call
         assertEquals(
             "Returns the width of the longest label + margin",
             20,
-            (int)instance.drawLabels(c, 0)
+            instance.drawLabels(c, 0)
         );
     }
 

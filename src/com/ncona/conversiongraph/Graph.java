@@ -8,12 +8,14 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.DisplayMetrics;
 import android.view.View;
 import com.ncona.conversiongraph.models.Legend;
 import com.ncona.conversiongraph.models.Measure;
 import com.ncona.conversiongraph.views.BarsView;
 import com.ncona.conversiongraph.views.LegendsView;
 import java.util.List;
+
 
 public class Graph extends View
 {
@@ -23,19 +25,19 @@ public class Graph extends View
     final static private int LABEL_SIZE = 16;
 
     /**
-     * Separation between labels
-     */
-    final static private int LABEL_SEPARATION = 10;
-
-    /**
-     * Margin between the labels and the plane
-     */
-    final static private int LABELS_PLANE_MARGIN = 5;
-
-    /**
      * Margin against the limit of the canvas
      */
     final static private int MARGIN = 10;
+
+    /**
+     * Actual label size considering density
+     */
+    protected int labelSize;
+
+    /**
+     * Actual margin against the limit of the canvas considering density
+     */
+    protected int margin;
 
     /**
      * List of measures that will be graphed
@@ -69,6 +71,7 @@ public class Graph extends View
         super(context);
         barsView = new BarsView();
         legendsView = new LegendsView();
+        calculateSizes(context);
     }
 
     /**
@@ -95,9 +98,18 @@ public class Graph extends View
     public void onDraw(final Canvas c) {
         initializePaint();
         int top = legendsView.draw(c, this.legends);
-        final int left = drawLabels(c, top) + MARGIN;
+        final int left = drawLabels(c, top) + margin;
         drawPlane(c, left, top);
         barsView.draw(c, left, getWidth(), top, measures, legends);
+    }
+
+    /**
+     * Calculates label size and margin based on screen density
+     */
+    protected void calculateSizes(final Context context) {
+        final float density = context.getResources().getDisplayMetrics().density;
+        labelSize = (int)((float)LABEL_SIZE * density);
+        margin = (int)((float)MARGIN * density);
     }
 
     /**
@@ -107,7 +119,7 @@ public class Graph extends View
         paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(Color.WHITE);
-        paint.setTextSize(LABEL_SIZE);
+        paint.setTextSize(labelSize);
         paint.setAntiAlias(true);
     }
 
@@ -129,22 +141,22 @@ public class Graph extends View
             }
         }
 
-        int halfLabel = LABEL_SIZE / 2;
+        int halfLabel = labelSize / 2;
         int currentTop = top;
         int currentBottom = 0;
         int labelPosition = 0;
         for (final Measure m : measures) {
             // Calculate where to draw the label
-            currentTop = currentTop + MARGIN;
-            currentBottom = currentTop + (m.values.length * LABEL_SIZE) +
-                    ((m.values.length - 1) * MARGIN);
+            currentTop = currentTop + margin;
+            currentBottom = currentTop + (m.values.length * labelSize) +
+                    ((m.values.length - 1) * margin);
             labelPosition = currentTop + ((currentBottom - currentTop) / 2) +
                 halfLabel;
 
             currentWidth = (int)paint.measureText(m.label);
             c.drawText(
                 m.label,
-                MARGIN + maxWidth - currentWidth,
+                margin + maxWidth - currentWidth,
                 labelPosition,
                 paint
             );
@@ -152,7 +164,7 @@ public class Graph extends View
             currentTop = currentBottom;
         }
 
-        return maxWidth + MARGIN;
+        return maxWidth + margin;
     }
 
     /**
