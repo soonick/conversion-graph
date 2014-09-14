@@ -56,11 +56,11 @@ public class GraphTest {
     @Test
     public void calculateSizesTakesDensityIntoAccount() {
         // Mocks
-        DisplayMetrics dm = mock(DisplayMetrics.class);
+        final DisplayMetrics dm = mock(DisplayMetrics.class);
         dm.density = 2;
-        Resources res = mock(Resources.class);
+        final Resources res = mock(Resources.class);
         when(res.getDisplayMetrics()).thenReturn(dm);
-        Activity context = mock(Activity.class);
+        final Activity context = mock(Activity.class);
         when(context.getResources()).thenReturn(res);
         final Graph instance = mock(Graph.class);
         doCallRealMethod().when(instance).calculateSizes(context);
@@ -69,8 +69,8 @@ public class GraphTest {
         instance.calculateSizes(context);
 
         // Assertions
-        assertEquals(instance.margin, 20);
-        assertEquals(instance.labelSize, 32);
+        assertEquals("Margin is twice the original", instance.margin, 20);
+        assertEquals("Label size is twice the original size", instance.labelSize, 32);
     }
 
     @Test
