@@ -22,12 +22,12 @@ public class Graph extends View
     /**
      * Label size
      */
-    final static private int LABEL_SIZE = 16;
+    final static private float LABEL_SIZE = 16;
 
     /**
      * Margin against the limit of the canvas
      */
-    final static private int MARGIN = 10;
+    final static private float MARGIN = 10;
 
     /**
      * Actual label size considering density
@@ -69,9 +69,10 @@ public class Graph extends View
      */
     public Graph(final Context context) {
         super(context);
-        barsView = new BarsView();
-        legendsView = new LegendsView();
-        calculateSizes(context);
+        float density = context.getResources().getDisplayMetrics().density;
+        barsView = new BarsView(density);
+        legendsView = new LegendsView(density);
+        calculateSizes(density);
     }
 
     /**
@@ -106,8 +107,7 @@ public class Graph extends View
     /**
      * Calculates label size and margin based on screen density
      */
-    protected void calculateSizes(final Context context) {
-        final float density = context.getResources().getDisplayMetrics().density;
+    protected void calculateSizes(final float density) {
         labelSize = (int)((float)LABEL_SIZE * density);
         margin = (int)((float)MARGIN * density);
     }

@@ -37,6 +37,11 @@ public class BarsViewTest {
         instance.paint = p;
         when(p.measureText("1000")).thenReturn(300f);
         instance.measures = m;
+        instance.captionSize = 12;
+        instance.barHeight = 16;
+        instance.barMargin = 10;
+        instance.captionMargin = 5;
+        instance.roundedPixels = 4;
 
         instance.draw(c, 0, 10000, 0, m, null);
 
@@ -104,6 +109,11 @@ public class BarsViewTest {
         when(instance.createRectangle(0, 0, 500, 20)).thenReturn(secondRectangle);
         instance.canvas = canvas;
         instance.paint = paint;
+        instance.captionSize = 12;
+        instance.barHeight = 16;
+        instance.barMargin = 10;
+        instance.captionMargin = 5;
+        instance.roundedPixels = 4;
 
         instance.drawPrettyRectangle(0, 0, 500, 20);
 

@@ -27,6 +27,21 @@ public class LegendsView
     final static private int LEGENDS_MARGIN = 5;
 
     /**
+     * Text size considering density
+     */
+    protected int textSize;
+
+    /**
+     * Margin considering density
+     */
+    protected int margin;
+
+    /**
+     * Margin between legends considering density
+     */
+    protected int legendsMargin;
+
+    /**
      * Default color for legend
      */
     final static private int DEFAULT_COLOR = Color.WHITE;
@@ -39,8 +54,18 @@ public class LegendsView
     /**
      * Initialize the paint
      */
-    public LegendsView() {
+    public LegendsView(final float density) {
+        calculateSizes(density);
         initializePaint();
+    }
+
+    /**
+     * Calculates label size and margin based on screen density
+     */
+    protected void calculateSizes(final float density) {
+        textSize = (int)((float)TEXT_SIZE * density);
+        margin = (int)((float)MARGIN * density);
+        legendsMargin = (int)((float)LEGENDS_MARGIN * density);
     }
 
     /**
@@ -50,7 +75,7 @@ public class LegendsView
         paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(DEFAULT_COLOR);
-        paint.setTextSize(TEXT_SIZE);
+        paint.setTextSize(textSize);
         paint.setAntiAlias(true);
     }
 
@@ -75,18 +100,18 @@ public class LegendsView
      *          graph knows to start drawing below this point.
      */
     public int draw(final Canvas canvas, final Legend[] legends) {
-        int top = MARGIN;
-        int left = MARGIN;
-        int colorRight = left + TEXT_SIZE;
-        int legendLeft = left + TEXT_SIZE + LEGENDS_MARGIN;
+        int top = margin;
+        int left = margin;
+        int colorRight = left + textSize;
+        int legendLeft = left + textSize + legendsMargin;
 
         for (int i = 0; i < legends.length; i++) {
-            canvas.drawRect(left, top, colorRight, top + TEXT_SIZE,
+            canvas.drawRect(left, top, colorRight, top + textSize,
                     createRectanglePaint(legends[i].color));
-            canvas.drawText(legends[i].label, legendLeft, top + TEXT_SIZE, paint);
-            top += TEXT_SIZE + LEGENDS_MARGIN;
+            canvas.drawText(legends[i].label, legendLeft, top + textSize, paint);
+            top += textSize + legendsMargin;
         }
 
-        return top + MARGIN;
+        return top + margin;
     }
 }

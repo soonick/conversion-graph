@@ -7,11 +7,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import android.app.Activity;
-import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.DisplayMetrics;
 import com.ncona.conversiongraph.models.Legend;
 import com.ncona.conversiongraph.models.Measure;
 import com.ncona.conversiongraph.views.BarsView;
@@ -56,17 +53,11 @@ public class GraphTest {
     @Test
     public void calculateSizesTakesDensityIntoAccount() {
         // Mocks
-        final DisplayMetrics dm = mock(DisplayMetrics.class);
-        dm.density = 2;
-        final Resources res = mock(Resources.class);
-        when(res.getDisplayMetrics()).thenReturn(dm);
-        final Activity context = mock(Activity.class);
-        when(context.getResources()).thenReturn(res);
         final Graph instance = mock(Graph.class);
-        doCallRealMethod().when(instance).calculateSizes(context);
+        doCallRealMethod().when(instance).calculateSizes(2);
 
         // Call
-        instance.calculateSizes(context);
+        instance.calculateSizes(2);
 
         // Assertions
         assertEquals("Margin is twice the original", instance.margin, 20);

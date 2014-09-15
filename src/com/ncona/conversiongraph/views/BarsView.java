@@ -1,6 +1,6 @@
 /**
  * @author Adrian Ancona Novelo<soonick5@yahoo.com.mx>
- **/
+ */
 
 package com.ncona.conversiongraph.views;
 
@@ -17,27 +17,52 @@ public class BarsView
     /**
      * Size of the bars captions
      */
-    final static private int CAPTION_SIZE = 12;
+    final static private float CAPTION_SIZE = 12;
 
     /**
      * Height of the bars
      */
-    final static private int BAR_HEIGHT = 16;
+    final static private float BAR_HEIGHT = 16;
 
     /**
      * Separation between bars
      */
-    final static private int BAR_MARGIN = 10;
+    final static private float BAR_MARGIN = 10;
 
     /**
      * Margin between the bar and its caption
      */
-    final static private int CAPTION_MARGIN = 5;
+    final static private float CAPTION_MARGIN = 5;
 
     /**
      * Number of pixels that will be used to round rectagle corners
      */
-    final static private int ROUNDED_PIXELS = 4;
+    final static private float ROUNDED_PIXELS = 4;
+
+    /**
+     * Size of bars caption with density
+     */
+    protected int captionSize;
+
+    /**
+     * Height of the bars with density
+     */
+    protected int barHeight;
+
+    /**
+     * Space between bars with density
+     */
+    protected int barMargin;
+
+    /**
+     * Margin between bar and caption with density
+     */
+    protected int captionMargin;
+
+    /**
+     * Rounded corners with density
+     */
+    protected int roundedPixels;
 
     /**
      * Canvas where bars will be drawn
@@ -67,8 +92,20 @@ public class BarsView
     /**
      * Initialize the paint
      */
-    public BarsView() {
+    public BarsView(final float density) {
+        calculateSizes(density);
         initializePaint();
+    }
+
+    /**
+     * Calculates label size and margin based on screen density
+     */
+    protected void calculateSizes(final float density) {
+        barHeight = (int)((float)BAR_HEIGHT * density);
+        barMargin = (int)((float)BAR_MARGIN * density);
+        captionMargin = (int)((float)CAPTION_MARGIN * density);
+        captionSize = (int)(CAPTION_SIZE * density);
+        roundedPixels = (int)((float)ROUNDED_PIXELS * density);
     }
 
     /**
@@ -78,7 +115,7 @@ public class BarsView
         paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(Color.WHITE);
-        paint.setTextSize(CAPTION_SIZE);
+        paint.setTextSize(captionSize);
         paint.setAntiAlias(true);
     }
 
@@ -103,9 +140,9 @@ public class BarsView
 
         // The width of the longest bar in pixels
         final int maxWidth = right -
-                (int)(maxValueWidth + left + (CAPTION_MARGIN * 2));
+                (int)(maxValueWidth + left + (captionMargin * 2));
 
-        top += BAR_MARGIN;
+        top += barMargin;
 
         Measure first = measures.get(0);
         String caption;
@@ -123,7 +160,7 @@ public class BarsView
                     caption += " (" + percentage + "%)";
                 }
                 drawValue(top, barWidth, caption);
-                top += BAR_MARGIN + BAR_HEIGHT;
+                top += barMargin + barHeight;
             }
         }
     }
@@ -149,15 +186,15 @@ public class BarsView
      */
     protected void drawPrettyRectangle(final int left, final int top,
             final int right, final int bottom) {
-        int rectRight = left + ROUNDED_PIXELS;
+        int rectRight = left + roundedPixels;
         if (rectRight > right) {
             rectRight = left + ((right - left) / 2);
         }
         canvas.drawRect(createRectangle(left, top, rectRight, bottom), paint);
         canvas.drawRoundRect(
             createRectangle(left, top, right, bottom),
-            ROUNDED_PIXELS,
-            ROUNDED_PIXELS,
+            roundedPixels,
+            roundedPixels,
             paint
         );
     }
@@ -174,13 +211,13 @@ public class BarsView
             left,
             top,
             left + width,
-            top + BAR_HEIGHT
+            top + barHeight
         );
 
         canvas.drawText(
             caption,
-            left + width + CAPTION_MARGIN,
-            top + CAPTION_SIZE,
+            left + width + captionMargin,
+            top + captionSize,
             paint
         );
     }

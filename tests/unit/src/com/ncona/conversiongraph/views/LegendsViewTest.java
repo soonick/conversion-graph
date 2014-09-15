@@ -21,6 +21,7 @@ public class LegendsViewTest {
     public void initializePaint() {
         final LegendsView instance = mock(LegendsView.class);
         doCallRealMethod().when(instance).initializePaint();
+        instance.textSize = 12;
 
         instance.initializePaint();
 
@@ -53,6 +54,10 @@ public class LegendsViewTest {
         final LegendsView instance = mock(LegendsView.class);
         instance.paint = paint;
         doCallRealMethod().when(instance).draw(canvas, legends);
+        instance.margin = 10;
+        instance.legendsMargin = 5;
+        instance.textSize = 12;
+
 
         instance.draw(canvas, legends);
 
@@ -74,6 +79,10 @@ public class LegendsViewTest {
         final LegendsView instance = mock(LegendsView.class);
         instance.paint = paint;
         doCallRealMethod().when(instance).draw(canvas, legends);
+        instance.margin = 10;
+        instance.legendsMargin = 5;
+        instance.textSize = 12;
+
 
         assertEquals(
             "Retuns bottom of all legends",
@@ -97,6 +106,9 @@ public class LegendsViewTest {
         doCallRealMethod().when(instance).draw(canvas, legends);
         when(instance.createRectanglePaint(4)).thenReturn(p1);
         when(instance.createRectanglePaint(7)).thenReturn(p2);
+        instance.margin = 10;
+        instance.legendsMargin = 5;
+        instance.textSize = 12;
 
         instance.draw(canvas, legends);
 
